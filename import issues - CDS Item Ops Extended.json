@@ -10,11 +10,17 @@
     "Issue Type" : {
       "jira.field" : "issuetype"
     },
+    "Reporter" : {
+      "jira.field" : "reporter"
+    },
     "Summary" : {
       "jira.field" : "summary"
     },
     "Sprint_Id" : {
       "existing.custom.field" : "11605"
+    },
+    "Story Points" : {
+      "existing.custom.field" : "11204"
     },
     "Custom field (Epic Link)" : {
       "existing.custom.field" : "11900"
@@ -24,11 +30,10 @@
   "config.delimiter" : ",",
   "config.project" : {
     "project.type" : null,
-    "project.key" : "TWC3149",
+    "project.key" : "TWC4618",
     "project.description" : null,
     "project.url" : null,
-    "project.name" : "CDS Item Operations",
-    "project.lead" : "ycteoh"
+    "project.name" : "CDS Item Operations Extended"
   },
   "config.date.format" : "dd/MMM/yy h:mm a"
 }

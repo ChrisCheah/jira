@@ -1,6 +1,7 @@
 #tmp files
 tmp*
 *tmp
+*csv
 
 # hosting
 .azure

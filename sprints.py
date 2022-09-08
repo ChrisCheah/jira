@@ -2,7 +2,6 @@ import requests
 import json
 import os
 import pandas as pd
-from urllib.parse import urljoin
 
 
 def query_jira_agile(site, auth, param, page_size=500):
@@ -47,10 +46,14 @@ def res_to_sprint(res):
 fname = "tmp/sprintss.csv"
 jirasite = "jira.devtools.intel.com"
 auth = "Bearer " + os.environ['cheahchr-jira-prod-pat']
-param = "board/38531/sprint"
+jira_boards = ['31967','38314']
+sprints = []
+# jira_boardid = 31967
+for jira_boardid in jira_boards:
+    param = "board/{}/sprint".format(jira_boardid)
+    res = query_jira_agile(jirasite, auth, param)
+    sprints += res_to_sprint(res)
 
-res = query_jira_agile(jirasite, auth, param)
-sprints = res_to_sprint(res)
 df_sprints = pd.DataFrame.from_records(sprints)
 df_sprints.to_csv(fname, mode='w', index=False, header=True)
 

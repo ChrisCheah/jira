@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "4fc69ccb-f972-474a-805f-eeacb73ef61b",
+		"name": "jira(Intel)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "647959"
+	},
+	"item": [
+		{
+			"name": "search",
+			"protocolProfileBehavior": {
+				"strictSSL": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{cheahchr-jira-prod-pat}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prod-api-host}}/rest/api/2/search?startAt=0&maxResults=1000&jql=project in(TWC3149,TWC4618) and issuetype =Story and status not in (Done, Canceled) &fields=key,summary,issuetype,reporter,created,updated,assignee,status,project,customfield_11900,duedate,customfield_11605",
+					"host": [
+						"{{prod-api-host}}"
+					],
+					"path": [
+						"rest",
+						"api",
+						"2",
+						"search"
+					],
+					"query": [
+						{
+							"key": "startAt",
+							"value": "0"
+						},
+						{
+							"key": "maxResults",
+							"value": "1000"
+						},
+						{
+							"key": "jql",
+							"value": "project in(TWC3149,TWC4618) and issuetype =Story and status not in (Done, Canceled) "
+						},
+						{
+							"key": "fields",
+							"value": "key,summary,issuetype,reporter,created,updated,assignee,status,project,customfield_11900,duedate,customfield_11605"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all sprints by board",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{cheahchr-jira-prod-pat}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{prod-api-host}}/rest/agile/1.0/board/{{jira_board}}/sprint",
+					"host": [
+						"{{prod-api-host}}"
+					],
+					"path": [
+						"rest",
+						"agile",
+						"1.0",
+						"board",
+						"{{jira_board}}",
+						"sprint"
+					],
+					"query": [
+						{
+							"key": "includeHistoricSprints",
+							"value": "true",
+							"disabled": true
+						},
+						{
+							"key": "includeFutureSprints",
+							"value": "true",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jira_board",
+			"value": "31967"
+		},
+		{
+			"key": "prod-api-host",
+			"value": "https://jira.devtools.intel.com",
+			"type": "string"
+		}
+	]
+}
