@@ -21,22 +21,23 @@ def query_jira(site, auth, jql, fields, page_size=500):
 
     url = "https://" + site + "/rest/api/2/search"
     http_res = requests.request("GET", url, headers=headers, params=query, verify=cert)
-    res = json.loads(http_res.text)
-    res_size = len(res['issues'])
-
-
-    # API operations
-    page_index = 0
-    while (res_size == page_size):
+    if http_res.status_code == 200:
+        res = json.loads(http_res.text)
+        res_size = len(res['issues'])
         # API operations
-        page_index = page_index + page_size
-        query['startAt'] = page_index
-        http_res = requests.request("GET", url, headers=headers, params=query, verify=cert)
-        res0 = json.loads(http_res.text)
-        res['issues'] = res['issues'] + res0['issues']
-        res_size = len(res0['issues'])
-        # print("len(res['issues'])", res_size)
-    return res
+        page_index = 0
+        while (res_size == page_size):
+            # API operations
+            page_index = page_index + page_size
+            query['startAt'] = page_index
+            http_res = requests.request("GET", url, headers=headers, params=query, verify=cert)
+            res0 = json.loads(http_res.text)
+            res['issues'] = res['issues'] + res0['issues']
+            res_size = len(res0['issues'])
+            # print("len(res['issues'])", res_size)
+        return res
+    else:
+        return None
 
 def res_to_issues(res):
     issues = []
@@ -82,8 +83,9 @@ def res_to_epics(res):
     for i in range(len(res['issues'])):
         issue['epic_link'] = res['issues'][i]['key']
         issue['epic_summary'] = res['issues'][i]['fields']['summary']
+        issue['capability_displayName'] = res['issues'][i]['fields']['customfield_36601']
         try:
-            if issue['epic_link'] is None or len(issue['epic_link']) < 10:
+            if issue['epic_link'] is None or len(issue['epic_link']) < 3:
                 issue['epic_displayName'] = None
             else:
                 issue['epic_displayName'] = '{}: {}'.format(issue['epic_link'], issue['epic_summary']) 
@@ -93,28 +95,40 @@ def res_to_epics(res):
         issue = {}
     return issues
 
+def get_issues_by_projects(query_jira, res_to_issues, jirasite, auth, projects=None):
+    # jql = 'project in ({}) and status not in (Canceled) and issuetype in (Story,Bug)'.format(jql_params)
+    if projects is None:
+        return None
+    else:
+        issues = []
+        jira_fields = 'key,summary,issuetype,reporter,created,updated,assignee,status,project,customfield_11900,customfield_11204,duedate,customfield_11605'
+        for project in projects:
+            jql = 'project={} and status not in (Canceled) and issuetype in (Story,Bug)'.format(project)
+            res = query_jira(jirasite, auth, jql, jira_fields)
+            issues += res_to_issues(res)
+        return issues
+
+def get_issue_epic_detail(query_jira, res_to_epics, jirasite, auth, jql_params):
+    jql = 'issue in (' + ','.join(jql_params) + ')'
+    jira_fields = 'key,summary,customfield_36601'
+    res = query_jira(jirasite, auth, jql, jira_fields)
+    epics = res_to_epics(res)
+    return epics
+
 fname = "tmp/issues.csv"
 jirasite = "jira.devtools.intel.com"
 auth = "Bearer " + os.environ['cheahchr-jira-prod-pat']
 
-jql_projects = "TWC3149,TWC4618"
-jql = 'project in ({}) and status not in (Canceled) and issuetype in (Story,Bug)'.format(jql_projects)
-jira_fields = 'key,summary,issuetype,reporter,created,updated,assignee,status,project,customfield_11900,customfield_11204,duedate,customfield_11605'
-
-res = query_jira(jirasite, auth, jql, jira_fields)
-issues = res_to_issues(res)
+projects = ['TWC3149','TWC4618']
+issues = get_issues_by_projects(query_jira, res_to_issues, jirasite, auth, projects)
 df_issues = pd.DataFrame.from_records(issues)
 
 # select unique not empty epic links 
 epic_links = df_issues[df_issues['epic_link'].notna()]['epic_link'].unique().tolist()
-jql = 'issue in (' + ','.join(epic_links) + ')'
-jira_fields = 'key,summary'
-res = query_jira(jirasite, auth, jql, jira_fields)
-
-epics = res_to_epics(res)
+epics = get_issue_epic_detail(query_jira, res_to_epics, jirasite, auth, epic_links)
 df_epics = pd.DataFrame.from_records(epics)
+
 # join issues and epics by epics link
 df_issues_final = pd.merge(df_issues, df_epics, on='epic_link', how ="left")
-
 df_issues_final.to_csv(fname, mode='w', index=False, header=True)
 

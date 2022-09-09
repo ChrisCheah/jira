@@ -22,8 +22,11 @@
     "Story Points" : {
       "existing.custom.field" : "11204"
     },
-    "Custom field (Epic Link)" : {
+    "Epic Link" : {
       "existing.custom.field" : "11900"
+    },
+    "Acceptance Criteria" : {
+      "existing.custom.field" : "11609"
     }
   },
   "config.value.mappings" : { },
