@@ -1,0 +1,15 @@
+{
+    "jira": {
+        "site": "jira.devtools.intel.com",
+        "token": "",
+        "token_env_name": "cheahchr-jira-prod-pat",
+        "projects": [
+            "TWC3149",
+            "TWC4618",
+            "TWC4370"
+        ]
+    },
+    "output": {
+        "filename": "issues.csv"
+    }
+}
