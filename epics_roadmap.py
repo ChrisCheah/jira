@@ -130,21 +130,6 @@ config_file = os.path.join(os.path.dirname(sys.argv[0]), 'epics_roadmap_config.j
 with open(config_file) as f:
    config = json.load(f)
 
-# config = {
-#     "jira":
-#     {
-#         "site": "jira.devtools.intel.com",
-#         "token": "",
-#         "token_env_name": "cheahchr-jira-prod-pat",
-#         "projects": ['TWC3149','TWC4618','TWC4370']
-#     },
-#     "output":
-#     {
-#         "filename": "issues.csv"
-#     }
-
-# }
-
 fname = os.path.join(os.path.dirname(sys.argv[0]), config['output']['filename'])
 jirasite = config['jira']['site']
 if config['jira']['token_env_name']:
