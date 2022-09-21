@@ -18,7 +18,10 @@ pip install --proxy=http://proxy-chain.intel.com:911 -r requirements.txt
 
 ## Usage
 ### Sprint Planning.xlsm
-Configure `epics_roadmap_config.json`
+#### US tree
+A pivot table that provide a tree view of user stories group by feature/epic and capacility over sprints
+
+Configure `epics_roadmap_config.json` to use `US tree`   
 1. Update list of projects
 `project`: list of JIRA project id
 2. Provide authetication token
@@ -26,7 +29,7 @@ Configure `epics_roadmap_config.json`
 or 
 `token_env_name`: OS environment variable that store the JIRA personal access token
 
-In Sprint Planning.xlsm, click `Data` -> `Refresh All`
+To refresh Sprint Planning.xlsm, click `Data` -> `Refresh All`
 
 
 
