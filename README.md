@@ -2,26 +2,32 @@
 
 
 ## Setting Up
-Powershell way
+Using Powershell
+1. Download
 ``` powershell
 git clone https://github.com/ChrisCheah/jira.git
 cd jira
 python -m venv env
 env\Scripts\activate.ps1
 ```
-
-Include proxy for installation within Intel network
+2. Install  
 ``` powershell
 pip install --proxy=http://proxy-chain.intel.com:911 -r requirements.txt
 ```
-or just
-``` powershell
-pip install -r requirements.txt
-```
+`--proxy=http://proxy-chain.intel.com:911` is needed when Intel VPN is turned on   
+
 ## Usage
-``` powershell
-epics_roadmap.py
-```
+### Sprint Planning.xlsm
+Configure `epics_roadmap_config.json`
+1. Update list of projects
+`project`: list of JIRA project id
+2. Provide authetication token
+`token`: JIRA personal access token 
+or 
+`token_env_name`: OS environment variable that store the JIRA personal access token
+
+In Sprint Planning.xlsm, click `Data` -> `Refresh All`
+
 
 
 
